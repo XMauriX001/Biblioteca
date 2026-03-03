@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Book;
 use App\Models\Libro;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -19,7 +20,7 @@ class LibroPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Libro $libro): bool
+    public function view(User $user, Book $Libro): bool
     {
         return false;
     }
@@ -35,7 +36,7 @@ class LibroPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Libro $libro): bool
+    public function update(User $user, Book $Libro): bool
     {
         return $user->hasRole('bibliotecario');
     }
@@ -43,7 +44,7 @@ class LibroPolicy
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Libro $libro): bool
+    public function delete(User $user, Book $Libro): bool
     {
         return false;
     }
@@ -51,7 +52,7 @@ class LibroPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Libro $libro): bool
+    public function restore(User $user, Book $Libro): bool
     {
         return false;
     }
@@ -59,7 +60,7 @@ class LibroPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Libro $libro): bool
+    public function forceDelete(User $user, Book $Libro): bool
     {
         return false;
     }
