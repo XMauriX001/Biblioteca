@@ -16,10 +16,12 @@ class Loan extends Model
         'return_at',
     ];
 
+    protected $appends = ['is_active'];
+
     public function isActive(): Attribute
     {
         return Attribute::make(
-            get: fn () => is_null($this->return_at),
+            get: fn() => is_null($this->return_at),
         );
     }
 
