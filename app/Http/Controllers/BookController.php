@@ -9,12 +9,12 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class BookController extends Controller
 {
-    use AuthorizesRequests; 
+    use AuthorizesRequests;
 
     public function index(Request $request)
     {
         $this->authorize('viewAny', Book::class);
-
+        
         $books = Book::when($request->has('title'), function ($query) use ($request) {
             $query->where('title', 'like', '%' . $request->input('title') . '%');
         })->when($request->has('isbn'), function ($query) use ($request) {
@@ -32,11 +32,10 @@ class BookController extends Controller
         return response()->json(BookResource::make($book));
     }
 
-    // Solo Bibliotecario puede crear
     public function store(Request $request)
     {
         $this->authorize('create', Book::class);
-
+        
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -44,16 +43,22 @@ class BookController extends Controller
             'total_copies' => 'required|integer|min:1',
         ]);
 
-        $book = Book::create($validated);
+        $book = Book::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'] ?? null,
+            'ISBN' => $validated['ISBN'],
+            'total_copies' => $validated['total_copies'],
+            'available_copies' => $validated['total_copies'],
+            'is_available' => true,
+        ]);
 
         return response()->json(BookResource::make($book), 201);
     }
 
-    //Solo Bibliotecario puede actualizar
     public function update(Request $request, Book $book)
     {
         $this->authorize('update', $book);
-
+        
         $validated = $request->validate([
             'title' => 'sometimes|string|max:255',
             'description' => 'nullable|string',
@@ -66,27 +71,11 @@ class BookController extends Controller
         return response()->json(BookResource::make($book));
     }
 
-    // Solo Bibliotecario puede eliminar
-    public function destroy(Book $book) 
+    public function destroy(Book $book)
     {
         $this->authorize('delete', $book);
         $book->delete();
-        return response()->json(['message' => 'Book deleted successfully'], 200);
-    }
 
-    //  Prestar solo Estudiantes y Docentes
-    public function borrow(Book $book)
-    {
-        $this->authorize('borrow', Book::class);
-
-        if ($book->available_copies <= 0) {
-            return response()->json(['message' => 'No hay copias disponibles'], 400);
-        }
-
-        // Aquí iría la lógica para crear el registro en la tabla 'loans'
-        // Por ahora, solo simulamos que se presta bajando el stock
-        $book->decrement('available_copies');
-
-        return response()->json(['message' => 'Libro prestado con éxito']);
+        return response()->json(['message' => 'Book deleted successfully'], 204);
     }
 }

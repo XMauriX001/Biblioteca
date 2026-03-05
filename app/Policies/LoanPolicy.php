@@ -2,18 +2,23 @@
 
 namespace App\Policies;
 
+use App\Models\Loan;
 use App\Models\User;
 
 class LoanPolicy
 {
-    // Solo Estudiantes y Docentes pueden crear un préstamo 
-    public function create(User $user): bool
+    public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['Estudiante', 'Docente']);
+        return true;
     }
 
-    // El historial lo pueden ver todos los usuarios autenticados
-    public function viewAny(User $user): bool
+    public function create(User $user): bool
+    {
+
+        return true;
+    }
+
+    public function return(User $user, Loan $loan): bool
     {
         return true;
     }
