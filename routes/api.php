@@ -9,12 +9,15 @@ use Illuminate\Support\Facades\Route;
 Route::post('v1/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-    // Auth
+
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('profile', [AuthController::class, 'profile']);
 
-    // Books
     Route::get('books', [BookController::class, 'index']);
+    Route::get('books/{book}', [BookController::class, 'show']);
+    Route::post('books', [BookController::class, 'store']);
+    Route::delete('books/{book}', [BookController::class, 'destroy']);
+
     Route::get('loans', [LoanController::class, 'index']);
     Route::post('loans', [LoanController::class, 'store']);
     Route::post('loans/{loan}/return', ReturnLoanController::class);
