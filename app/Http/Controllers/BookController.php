@@ -23,7 +23,7 @@ class BookController extends Controller
             $query->where('is_available', $request->boolean('is_available'));
         })->paginate();
 
-        return response()->json(BookResource::collection($books));
+        return BookResource::collection($books);
     }
 
     public function show(Book $book)

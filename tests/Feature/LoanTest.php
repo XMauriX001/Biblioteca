@@ -75,7 +75,7 @@ class LoanTest extends TestCase
     }
 
 
-    public function it_cannot_return_already_returned_loan()
+    public function test_it_cannot_return_already_returned_loan()
     {
         $user = User::factory()->create();
         $book = Book::factory()->create();
